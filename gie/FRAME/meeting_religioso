@@ -1,0 +1,15 @@
+dynamic(frame/2) :- not(dynamic(frame/2)). 
+
+:-load_class(meeting).
+
+frame(meeting_religioso, [
+					[a_kind_of, meeting, 1],
+					[tipologia, religioso, 1],
+				 	[num_partecipanti, unfilled, 1],
+				 	[luogo, unfilled, 1],
+				 	[ricorrente, no, 1],
+					[durata, unfilled, 1],
+					[num_giorni, 1, 1],
+					[intervallo, yes, 1],
+					[momento_meeting, [preghiera_iniziale, presentazione, relazione, primo_dibattito, intervallo, secondo_dibattito, preghiera_finale, chiusura], 1]
+				 ]).

@@ -1,0 +1,9 @@
+dynamic(frame/2) :- not(dynamic(frame/2)).
+:-load_class(finestra).
+
+frame(finestra_sf_02, [ 
+					[a_kind_of, oggetto_materiale, 1],
+					[aperta, si, 1],
+					[vetro_scuro, no, 1],
+					[tenda, yes, 1]
+					]).	

@@ -1,0 +1,8 @@
+dynamic(frame/2) :- not(dynamic(frame/2)).
+:-load_class(meeting).
+
+frame(meeting_sportivo, [
+					[a_kind_of, meeting, 1],
+					[tipologia, sportivo, 1],
+				 	[momento_meeting, [presentazione, relazione, primo_dibattito, attivita_sprtiva, intervallo, secondo_dibattito, chiusura], 1]
+				 ]).

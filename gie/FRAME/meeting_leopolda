@@ -1,0 +1,12 @@
+dynamic(frame/2) :- not(dynamic(frame/2)).
+:-load_class(meeting_politico).
+
+frame(meeting_leopolda, [
+					[instance_of, meeting_politico, 1],
+					[luogo, unfilled, 1],
+				 	[num_partecipanti, 48, 1],
+				 	[luogo, sala_meeting_hotel_roma, 1],
+				 	[ricorrente, no, 1],
+					[durata, 3, 1],     
+					[num_giorni, 1, 1]
+				 ]).

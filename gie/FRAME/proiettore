@@ -1,0 +1,8 @@
+dynamic(frame/2) :- not(dynamic(frame/2)).
+:-load_class(oggetto_materiale).
+
+
+frame(proiettore, [ 
+					[a_kind_of, oggetto_materiale, 1],
+					[acceso, no, 1]	
+					]).	

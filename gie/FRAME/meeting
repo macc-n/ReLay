@@ -1,0 +1,17 @@
+dynamic(frame/2) :- not(dynamic(frame/2)).
+
+
+
+frame(meeting, [
+					[temi, [], 1],
+					[tipologia, unfilled, 1],
+				 	[num_partecipanti, unfilled, 1],
+				 	[figure_presenti, [tecnico_audio_video, moderatore, oratore, verbalizzatore, staff_sicurezza], 1],
+				 	[luogo, unfilled, 1],
+				 	[ricorrente, no, 1],
+					[durata, unfilled, 1],
+					[num_giorni, 1, 1],
+					[intervallo, yes, 1],
+					[momento_meeting, [presentazione, relazione, primo_dibattito, intervallo, secondo_dibattito, chiusura], 1]		
+					%dibattito, presentazione, pausa, saluti_finali
+				 ]).

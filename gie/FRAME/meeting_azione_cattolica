@@ -1,0 +1,10 @@
+
+:-load_class(meeting_religioso).
+dynamic(frame/2) :- not(dynamic(frame/2)).
+
+frame(meeting_azione_cattolica, [
+					[instance_of, meeting_religioso, 1],
+				 	[num_partecipanti, 22, 1],
+				 	[luogo, sala_conferenza_sanfrancesco, 1],
+					[durata, 3, 1]     
+				 ]).

@@ -1,0 +1,15 @@
+dynamic(frame/2) :- not(dynamic(frame/2)). 
+:-load_class(luogo).
+
+frame(sala, [ 
+					[a_kind_of, luogo, 1],
+					[num_finestre, unfilled, 1],
+					[num_tavoli, unfilled, 1],
+					[num_posti, unfilled, 1],
+					[posti_handicap, unfilled, 1],
+					[aria_condizionata, yes, 1],
+					[piante, no, 1],
+					[num_tavoli, sala_riunioni, 1],
+					[tipo_stanza, unfilled, 1],
+					[proiettore, yes, 1]
+					]).	

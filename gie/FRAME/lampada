@@ -1,0 +1,9 @@
+dynamic(frame/2) :- not(dynamic(frame/2)).
+:-load_class(oggetto_materiale).
+
+
+frame(lampada, [ 
+					[a_kind_of, oggetto_materiale, 1],
+					[acceso, no, 1],
+					[tipo_luminazione, gialla, 1]
+					]).	

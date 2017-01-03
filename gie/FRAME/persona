@@ -1,0 +1,24 @@
+dynamic(frame/2) :- not(dynamic(frame/2)).
+frame(persona, [
+					[appellativo, unfilled, 1],
+					[codice_fiscale, unfilled, 1],
+					[num_braccia, 2, 1],
+					[num_gambe, 2, 1],
+					[num_mani, 2, 0.8],
+					[num_piedi, 2, 1],
+					[num_occhi, 2, 1],
+					[capelli, yes, 1],
+					[is_a, mammifero, 1],
+					[codice_fiscale, unfilled, 1],
+				 	[gender,  unfilled, 1],
+				 	[nome, unfilled, 1],
+					[cognome, unfilled, 1],
+					[eta, unfilled, 1],
+					[occhiali, no, 1],
+					[nazionalita, unfilled, 1],
+					[altezza, unfilled, 1],
+					[peso, unfilled, 1],
+					[seduta, no, 1],
+					[stato_fisico, unfilled1, 1],
+					[stato_psicologico, unfilled, 1]
+				]).

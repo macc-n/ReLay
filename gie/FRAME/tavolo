@@ -1,0 +1,10 @@
+dynamic(frame/2) :- not(dynamic(frame/2)).
+:-loader(oggetto_materiale).
+
+frame(tavolo, [ 
+					[a_kind_of, oggetto_materiale, 1],
+					[copritavolo, yes, 1],
+					[diemnsioni, grande, 1],  %piccolo, medio, grande, enorme
+					[forma, ovale, 1], 	%tondo, ovale, rettangolare, quadrato, rombo, esagono, pentagono
+					[tenda, yes, 1]	 	
+					]).	

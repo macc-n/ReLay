@@ -1,0 +1,11 @@
+dynamic(frame/2) :- not(dynamic(frame/2)).
+:-loader(oggetto_materiale).
+
+frame(sedia, [ 
+					[a_kind_of, oggetto_materiale, 1],
+					[rotelle, no, 1],
+					[mobile, yes, 1],
+					[design, unfilled, 1],
+					[materiale, unfilled, 1],
+					[num_gambe, 4, 1]					
+					]).	

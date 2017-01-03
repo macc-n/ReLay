@@ -1,0 +1,6 @@
+dynamic(frame/2) :- not(dynamic(frame/2)).
+
+frame(oggetto_materiale, [ 
+					[nome, unfilled, 1],
+					[posizione, unfilled, 1]	
+					]).	

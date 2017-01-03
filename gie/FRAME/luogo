@@ -1,0 +1,7 @@
+dynamic(frame/2) :- not(dynamic(frame/2)).
+frame(luogo, [ 
+					[stato, unfilled, 1],
+					[citta, unfilled, 1],
+					[zona, unfilled, 1],
+					[luogo_aperto, no, 1]
+					]).	 

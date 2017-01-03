@@ -1,0 +1,12 @@
+dynamic(frame/2) :- not(dynamic(frame/2)).s
+:-load_class(persona).
+
+frame(giuseppe, [
+					[posizione, lavoro_1, 1],
+					[codice_fiscale, cod_fiscale_1, 1],
+					[gender, maschio, 1],
+					[nome, nome_1, 1],
+					[cognome, cognome_1, 1],
+					[eta, 73, 1],
+					[instance_of, persona, 1]			
+					]).

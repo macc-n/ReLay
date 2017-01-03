@@ -1,0 +1,16 @@
+
+:-load_class(sala).
+dynamic(frame/2) :- not(dynamic(frame/2)).
+
+frame(sala_conferenze_sanfrancesco, [ 
+					[instance_of, sala, 1],
+					[num_finestre, 5, 1],
+					[num_tavoli, 2, 1],
+					[num_posti, 20, 1],
+					[posti_handicap, 10, 1],
+					[aria_condizionata, yes, 1],
+					[piante, no, 1],
+					[num_tavoli, sala_riunioni, 1],
+					[proiettore, yes, 1],
+					[finestre, [finestra_sf_01, finestra_sf_02, finestra_sf_03, finestra_sf_04],1]
+					]).	

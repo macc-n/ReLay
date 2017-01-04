@@ -1,5 +1,5 @@
 /*************************************************************************
-        Nome: gie_forward.pl
+        Nome: gie_forward_rete.pl
 
 	Realizzazione: Settembre, 2013
         	Descrizione: Realizzazione del Ragionamento forward del GIE

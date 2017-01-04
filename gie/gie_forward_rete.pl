@@ -63,7 +63,7 @@
 		Autore: Bruno S. - Morelli N. - Pinto A.
 		Obiettivo:
 			- Modifica del metodo check_unique per rimozione forzata
-
+*************************************************************************
 *************************************************************************/
 
 :- dynamic (fact/3).

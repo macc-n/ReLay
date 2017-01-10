@@ -6,7 +6,7 @@ Descrizione: Modulo che permette di eseguire i seguenti filtri:
 			- Visualizzazione di fatti dato in input il loro nome.
 			- Visualizzazione di fatti che contengono il valore di un termine dato in input.
 			- Visualizzazione di fatti che contengono il nome di un fatto e il valore di un suo termine dati in input (Combinazione delle due precedenti). 
-
+CIAO
 ************************************************************************/
 
 filter_menu :-

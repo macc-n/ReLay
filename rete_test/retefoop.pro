@@ -1,7 +1,7 @@
 % RETEFOOPS - forward chaining, frames, and Rete algorithm, also using
 %     LEX and MEA to sort the conflict set.
 %
-% Copyright (c) Dennis Merritt, 1988
+% Copyright (c) Gruppo IA, 2017
 
 :- reconsult('retepred.pro').
 

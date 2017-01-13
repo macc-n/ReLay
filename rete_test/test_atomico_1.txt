@@ -1,0 +1,2 @@
+rule(1,tv(IDtv,Opposite,floor),and([couch(IDcouch,IDwall),wall(IDwall,Opposite),tv(IDtv,no,floor)]),3,1).
+rule(2,end_table(Opposite),and([wall(IDwall,Opposite),couch(IDcouch,IDwall),tv(IDtv,no,table),end_table(no)]),3,1).

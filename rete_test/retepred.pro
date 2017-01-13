@@ -79,9 +79,10 @@ wr_lis([H|T]) :-
 rete_compil :-
 	%rule N# LHS ==> RHS,
 	%rule(Idr,R,C,P,Crt),
-	rule(N,RHS,LHS,K,P),
-	write(N), write(' '), write(LHS), write(' '), write(RHS), write(' '), write(K), write(' '), write(P), nl,
-	%rete_comp(N,LHS,RHS),
+	rule(N,RHS,and(LHS),K,P),
+	%write(N), write(' '), write(LHS), write(' '), write(RHS), write(' '), write(K), write(' '), write(P), nl,
+	
+	rete_comp(N,LHS,RHS),
 	fail.
 rete_compil :-
 	message(201).
@@ -89,9 +90,13 @@ rete_compil :-
 % compile an individual rule into the net
 
 rete_comp(N,[H|T],RHS) :-
-	term(H,Hw),
-	check_root(RN,Hw,HList),
-	retcom(root(RN),[Hw/_],HList,T,N,RHS),
+	%term(H,Hw),
+	%check_root(RN,Hw,HList),
+	%retcom(root(RN),[Hw/_],HList,T,N,RHS),
+	%functor(H,P,_),
+	%term_variables(H,PList),
+	check_root(RN,H,HList),
+	retcom(root(RN),[H/_],HList,T,N,RHS),
 	message(202,N), !.
 rete_comp(N,_,_) :-
 	message(203,N).
@@ -109,9 +114,11 @@ retcom(PNID,OutTok,PrevList,[],N,RHS) :-
 	update_node(PNID,PrevList,rule-N),
 	!.
 retcom(PNID,PrevNode,PrevList,[H|T],N,RHS) :-
-	term(H,Hw),
-	check_root(RN,Hw,HList),
-	check_node(PrevNode,PrevList,[Hw/_],HList,NID,OutTok,NList),
+	%term(H,Hw),
+	%check_root(RN,Hw,HList),
+	check_root(RN,H,HList),
+	%check_node(PrevNode,PrevList,[Hw/_],HList,NID,OutTok,NList),
+	check_node(PrevNode,PrevList,[H/_],HList,NID,OutTok,NList),
 	update_node(PNID,PrevList,NID-l),
 	update_root(RN,HList,NID-r),
 	!,
@@ -122,20 +129,24 @@ retcom(PNID,PrevNode,PrevList,[H|T],N,RHS) :-	%some kind of tester call
 	!,
 	retcom(test-NID,OutTok,NList,T,N,RHS).	
 
-term(Class-Name with List,Class-Name with List).
-term(Class-Name, Class-Name with []).
+%term(Class-Name with List,Class-Name with List).
+%term(Class-Name, Class-Name with []).
+%term(Value(Attribute)).
 
 check_root(NID,Term,[]) :-
 	not(root(_,Term,_)),
+	write(NID),write('_1 Term: '),write(Term),nl,
 	gen_nid(NID),
 	assertz( root(NID,Term,[]) ), !.
 check_root(N,Term,List) :-
+	write(N),write('_2 Term: '),write(Term),nl,
 	asserta(temp(Term)),
 	retract(temp(T1)),
 	root(N,Term,List),
 	root(N,T2,_),
 	comp_devar(T1,T2), !.
 check_root(NID,Term,[]) :-
+	write(NID),write('_3 Term: '),write(Term),nl,
 	gen_nid(NID),
 	assertz( root(NID,Term,[]) ).
 

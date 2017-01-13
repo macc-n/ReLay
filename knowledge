@@ -669,4 +669,4 @@ rule(652,shutters_home(X,open_sh),and([living_room_occupied(X),solar_radiation_m
 rule(653,shutters_home(X,close_sh),and([living_room_free(X),solar_radiation_high(X)]),4,1).
 rule(654,shutters_home(X,open_sh),and([living_room_occupied(X),solar_radiation_high(X)]),3,0.75).
 %Test
-rule(655,cacca(X),and([central_heating_level(X,l3_h)]),3,1).
+rule(655,cacca(X),and([central_heating_level(l3_h,X)]),3,1).

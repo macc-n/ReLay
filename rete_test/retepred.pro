@@ -96,7 +96,7 @@ rete_comp(N,[H|T],RHS) :-
 	%functor(H,P,_),
 	%term_variables(H,PList),
 	check_root(RN,H,HList),
-	retcom(root(RN),[H/_],HList,T,N,RHS),
+	retcom(root(RN),[H/_],HList,T,N,[RHS]),
 	message(202,N), !.
 rete_comp(N,_,_) :-
 	message(203,N).
@@ -135,18 +135,15 @@ retcom(PNID,PrevNode,PrevList,[H|T],N,RHS) :-	%some kind of tester call
 
 check_root(NID,Term,[]) :-
 	not(root(_,Term,_)),
-	write(NID),write('_1 Term: '),write(Term),nl,
 	gen_nid(NID),
 	assertz( root(NID,Term,[]) ), !.
 check_root(N,Term,List) :-
-	write(N),write('_2 Term: '),write(Term),nl,
 	asserta(temp(Term)),
 	retract(temp(T1)),
 	root(N,Term,List),
 	root(N,T2,_),
 	comp_devar(T1,T2), !.
 check_root(NID,Term,[]) :-
-	write(NID),write('_3 Term: '),write(Term),nl,
 	gen_nid(NID),
 	assertz( root(NID,Term,[]) ).
 
@@ -274,22 +271,28 @@ de_vari([H|T]) :-
 de_vari(X) :- de_var(X).
 
 de_var(X/_) :- de_var(X).
-de_var(X-Y with List) :-
+%de_var(X-Y with List) :-
+	%init_vargen,
+	%de_v(X-Y),
+	%de_vl(List), !.
+de_var(X) :-
 	init_vargen,
-	de_v(X-Y),
-	de_vl(List), !.
-de_var(X-Y) :-
-	init_vargen,
-	de_v(X-Y), !.
+	term_variables(X,XList),
+	de_vl(XList).
+%de_var(X-Y) :-
+	%init_vargen,
+	%de_v(X-Y), !.
 
 de_vl([]).
 de_vl([H|T]) :-
 	de_v(H),
 	de_vl(T).
 
-de_v(X-Y) :-
-	d_v(X),
-	d_v(Y).
+%de_v(X-Y) :-
+	%d_v(X),
+	%d_v(Y).
+de_v(X) :-
+	d_v(X).
 
 d_v(V) :-
 	var(V),
@@ -314,30 +317,49 @@ var_gen(V) :-
 % add a token to the rete net.  a token is of the form C-N with [S-V,...]
 % ReqList gets bound with the values from the term added to the database.
 
-addrete(Class,Name,TimeStamp) :-
-	root(ID,Class-Name with ReqList, NextList),
-	ffsend(Class,Name,ReqList,TimeStamp,NextList),
+%addrete(Class,Name,TimeStamp) :-
+	%root(ID,Class-Name with ReqList, NextList),
+	%ffsend(Class,Name,ReqList,TimeStamp,NextList),
+	%fail.
+addrete(Name,TimeStamp) :-
+	root(ID,P,NextList),
+	functor(P,Name,_),
+	term_variables(P,ReqList),
+	ffsend(Name,ReqList,TimeStamp,NextList),
 	fail.
-addrete(_,_,_).
+%addrete(_,_,_).
+addrete(_,_).
+
 
 % fullfill the request list from the token, and send the instantiated
 % token through the net.
 
-ffsend(Class,Name,ReqList,TimeStamp,NextList) :-
-	getf(Class,Name,ReqList),
-	send(tok(add,[(Class-Name with ReqList)/TimeStamp]), NextList),
+%ffsend(Class,Name,ReqList,TimeStamp,NextList) :-
+	%getf(Class,Name,ReqList),
+	%send(tok(add,[(Class-Name with ReqList)/TimeStamp]), NextList),
+	%!.
+ffsend(Name,ReqList,TimeStamp,NextList) :-
+	getf(Name,ReqList),
+	send(tok(add,[Name(ReqList)/TimeStamp]), NextList),
 	!.
 
-delrete(Class,Name,TimeStamp) :-
-	root(ID,Class-Name with ReqList, NextList),
-	delr(Class,Name,ReqList,TimeStamp),
+%delrete(Class,Name,TimeStamp) :-
+	%root(ID,Class-Name with ReqList, NextList),
+	%delr(Class,Name,ReqList,TimeStamp),
+	%fail.
+%delrete(_,_,_).
+delrete(Name,TimeStamp) :-
+	root(ID,P,NextList),
+	functor(P,Name,_),
+	term_variables(P,ReqList),
+	delr(Name,ReqList,TimeStamp),
 	fail.
-delrete(_,_,_).
+delrete(_,_).
 
-delr(Class,Name,ReqList,TimeStamp) :-
-	getf(Class,Name,ReqList),
-	!, send(tok(del,[(Class-Name with ReqList)/TimeStamp]), NextList).
-delr(Class,Name,ReqList,TimeStamp).
+delr(Name,ReqList,TimeStamp) :-
+	getf(Name,ReqList),
+	!, send(tok(del,[Name(ReqList)/TimeStamp]), NextList).
+delr(Name,ReqList,TimeStamp).
 
 % send the new token to each of the succesor nodes
 

@@ -1,0 +1,2 @@
+rule(1,manifesta(X,anoressia_nervosa),and([mostra(X,comportamento_generale_0),mostra(X,criterio_diagnostico_basso_peso),mostra(X,criterio_diagnostico_paura_aumentare_peso),mostra(X,criterio_diagnostico_anomalia_percezione_peso_e_corpo),mostra(X,no_indice_gravita_anoressia)]),1,1).
+rule(2,manifesta(X,anoressia_nervosa_in_forma_lieve),and([mostra(X,comportamento_generale_0),mostra(X,criterio_diagnostico_basso_peso),mostra(X,criterio_diagnostico_paura_aumentare_peso),mostra(X,criterio_diagnostico_anomalia_percezione_peso_e_corpo),mostra(X,gravita_disturbo_lieve)]),1,1).

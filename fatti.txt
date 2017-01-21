@@ -1,0 +1,5 @@
+fact(1,mostra(ermenegildo,comportamento_generale_0),1).
+fact(2,mostra(ermenegildo,criterio_diagnostico_basso_peso),1).
+fact(3,mostra(ermenegildo,criterio_diagnostico_paura_aumentare_peso),1).
+fact(4,mostra(ermenegildo,criterio_diagnostico_anomalia_percezione_peso_e_corpo),1).
+fact(5,mostra(ermenegildo,no_indice_gravita_anoressia),1).

@@ -334,32 +334,37 @@ addrete(_,_).
 % fullfill the request list from the token, and send the instantiated
 % token through the net.
 
-%ffsend(Class,Name,ReqList,TimeStamp,NextList) :-
-	%getf(Class,Name,ReqList),
-	%send(tok(add,[(Class-Name with ReqList)/TimeStamp]), NextList),
-	%!.
-ffsend(Name,ReqList,TimeStamp,NextList) :-
-	getf(Name,ReqList),
-	send(tok(add,[Name(ReqList)/TimeStamp]), NextList),
+ffsend(Class,Name,ReqList,TimeStamp,NextList) :-
+	getf(Class,Name,ReqList),
+	send(tok(add,[(Class-Name with ReqList)/TimeStamp]), NextList),
 	!.
+%ffsend(Name,ReqList,TimeStamp,NextList) :-
+	%getf(Name,ReqList),
+	%send(tok(add,[Name(ReqList)/TimeStamp]), NextList),
+	%!.
 
-%delrete(Class,Name,TimeStamp) :-
-	%root(ID,Class-Name with ReqList, NextList),
-	%delr(Class,Name,ReqList,TimeStamp),
-	%fail.
-%delrete(_,_,_).
-delrete(Name,TimeStamp) :-
-	root(ID,P,NextList),
-	functor(P,Name,_),
-	term_variables(P,ReqList),
-	delr(Name,ReqList,TimeStamp),
+delrete(Class,Name,TimeStamp) :-
+	root(ID,Class-Name with ReqList, NextList),
+	delr(Class,Name,ReqList,TimeStamp),
 	fail.
-delrete(_,_).
+delrete(_,_,_).
+%delrete(Name,TimeStamp) :-
+	%root(ID,P,NextList),
+	%functor(P,Name,_),
+	%term_variables(P,ReqList),
+	%delr(Name,ReqList,TimeStamp),
+	%fail.
+%delrete(_,_).
 
-delr(Name,ReqList,TimeStamp) :-
-	getf(Name,ReqList),
-	!, send(tok(del,[Name(ReqList)/TimeStamp]), NextList).
-delr(Name,ReqList,TimeStamp).
+%delr(Name,ReqList,TimeStamp) :-
+	%getf(Name,ReqList),
+	%!, send(tok(del,[Name(ReqList)/TimeStamp]), NextList).
+%delr(Name,ReqList,TimeStamp).
+
+delr(Class,Name,ReqList,TimeStamp) :-
+	getf(Class,Name,ReqList),
+	!, send(tok(del,[(Class-Name with ReqList)/TimeStamp]), NextList).
+delr(Class,Name,ReqList,TimeStamp).
 
 % send the new token to each of the succesor nodes
 

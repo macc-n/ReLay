@@ -3,7 +3,7 @@
 %
 % Copyright (c) Gruppo IA, 2017
 
-:- reconsult('retepred.pro').
+:- reconsult('retepred.pl').
 
 % operator definitions
 
@@ -86,19 +86,23 @@ initialize :-
 	abolish(conflict_set,1),
 	assert(conflict_set([])),
 	assert(mea(no)),
-	initial_data(X),
-	assert_list(X),
+	%initial_data(X),
+	forall(fact(X,Y,Z),assert_ws(fact(X,Y,Z))),
+	%assert_list(X),
 	message(121), !.
 initialize :-
 	message(103).
 
+
+
+
 % working storage is represented frame instances - frinsts and also
 % stored in a rete net
 
-assert_list([]) :- !.
-assert_list([H|T]) :-
-	assert_ws(H),
-	!,assert_list(T).
+%assert_list([]) :- !.
+%assert_list([H|T]) :-
+	%assert_ws(H),
+	%!,assert_list(T).
 
 % the main inference loop, find a rule and try it.  if it fired, say so
 % and repeat the process.  if not go back and try the next rule.  when
@@ -178,11 +182,21 @@ get_ws(Prem,Time) :-
 	conv(Prem,Class,Name,ReqList),
 	getf(Class,Name,ReqList,Time).
 
-assert_ws(Prem) :-
-	message(109,Prem),
-	conv(Prem,Class,Name,AList),
-	addf(Class,Name,AList,TimeStamp),
-	addrete(Class,Name,TimeStamp).
+%assert_ws(Prem) :-
+	%message(109,Prem),
+	%conv(Prem,Class,Name,AList),
+	%addf(Class,Name,AList,TimeStamp),
+	%addrete(Class,Name,TimeStamp).
+
+assert_ws(fact(X,Y,Z)) :-
+	message(109,Y),
+	%conv(Prem,Class,Name,AList),
+	%functor(Y,Name,_),
+	%term_variables(Y,AList),
+	Y=..[Name|AList],
+	write(Y),nl,write(Name),nl,write(AList),nl.
+	%addf(Name,AList,TimeStamp),
+	%addrete(Name,TimeStamp).
 	
 update_ws(Prem) :-
 	conv(Prem,Class,Name,UList),
@@ -199,8 +213,8 @@ retract_ws(Prem) :-
 	delrete(Class,Name,TimeStamp),
 	delf(Class,Name,UList).
 
-conv(Class-Name with List, Class, Name, List).
-conv(Class-Name, Class, Name, []).
+%conv(Class-Name with List, Class, Name, List).
+%conv(Class-Name, Class, Name, []).
 
 % various tests allowed on the LHS
 

@@ -190,9 +190,6 @@ get_ws(Prem,Time) :-
 
 assert_ws(fact(X,Y,Z)) :-
 	message(109,Y),
-	%conv(Prem,Class,Name,AList),
-	%functor(Y,Name,_),
-	%term_variables(Y,AList),
 	Y=..[Name|AList],
 	write(Y),nl,write(Name),nl,write(AList),nl.
 	%addf(Name,AList,TimeStamp),

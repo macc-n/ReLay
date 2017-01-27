@@ -321,11 +321,12 @@ var_gen(V) :-
 	%root(ID,Class-Name with ReqList, NextList),
 	%ffsend(Class,Name,ReqList,TimeStamp,NextList),
 	%fail.
-addrete(Name,TimeStamp) :-
-	root(ID,P,NextList),
-	functor(P,Name,_),
-	term_variables(P,ReqList),
-	ffsend(Name,ReqList,TimeStamp,NextList),
+addrete(Fact,TimeStamp) :-
+	root(ID,Fact,NextList),
+	write('fact: '),write(Fact),nl,
+	Fact=..[Name|ReqList],
+	%ffsend(Name,ReqList,TimeStamp,NextList),
+	ffsend(Fact,TimeStamp,NextList),
 	fail.
 %addrete(_,_,_).
 addrete(_,_).
@@ -338,10 +339,14 @@ addrete(_,_).
 	%getf(Class,Name,ReqList),
 	%send(tok(add,[(Class-Name with ReqList)/TimeStamp]), NextList),
 	%!.
-ffsend(Name,ReqList,TimeStamp,NextList) :-
-	getf(Name,ReqList),
-	write(Name),write(' '),write(ReqList),
+%ffsend(Name,ReqList,TimeStamp,NextList) :-
+	%getf(Name,ReqList),
+	%write('ffsend: '),write(Name),write(' '),write(ReqList),nl,
 	%send(tok(add,[Name(ReqList)/TimeStamp]), NextList),
+	%!.
+ffsend(Fact,TimeStamp,NextList) :-
+	%getf(Name,ReqList),
+	send(tok(add,[Fact/TimeStamp]), NextList),
 	!.
 
 %delrete(Class,Name,TimeStamp) :-
@@ -373,6 +378,7 @@ delr(Name,ReqList,TimeStamp).
 
 send(_,[]).
 send(Tokens, [Node|Rest]) :-
+	write('send: '),write(Node),write(' '),write(Tokens),nl,
 	sen(Node, Tokens),
 	send(Tokens, Rest).
 

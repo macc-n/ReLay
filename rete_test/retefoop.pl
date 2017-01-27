@@ -117,7 +117,9 @@ go :-
 	!,go.
 go :-
 	conflict_set([]),
-	finished, !.			% supplied in kb for what to do at end
+	%finished, !.			supplied in kb for what to do at end
+	write('Conflict set is empty'),nl,
+	!.
 go :-
 	message(119).
 
@@ -191,9 +193,10 @@ get_ws(Prem,Time) :-
 assert_ws(fact(X,Y,Z)) :-
 	message(109,Y),
 	Y=..[Name|AList],
-	write(Y),nl,write(Name),nl,write(AList),nl.
+	%write(Y),nl,write(Name),nl,write(AList),nl,
 	%addf(Name,AList,TimeStamp),
 	%addrete(Name,TimeStamp).
+	addrete(Y,TimeStamp).
 	
 update_ws(Prem) :-
 	conv(Prem,Class,Name,UList),
@@ -248,12 +251,15 @@ take(retract(N),LHS) :-
 take(A,_) :-take(A),!.
 
 take(retract(X)) :- retract_ws(X), !.
+
 take(assert(X)) :-
 	assert_ws(X),
 	!.
+
 take(update(X)) :-
 	update_ws(X),
 	!.
+	
 take(X # Y) :- X=Y,!.
 take(X = Y) :- X is Y,!.
 take(write(X)) :- write(X),!.
@@ -391,9 +397,18 @@ add_frame(Class, UList) :-
 	retract(frame(Class,_)),
 	asserta(frame(Class,NewList)), !.
 
-addf(Class,Nm,UList) :- addf(Class,Nm,UList,TimeStamp).
+%addf(Class,Nm,UList) :- addf(Class,Nm,UList,TimeStamp).
 
-addf(Class,Nm,UList,TimeStamp) :-
+%addf(Class,Nm,UList,TimeStamp) :-
+	%(var(Nm),genid(Name);Name=Nm),
+	%add_slots(Class,Name,[ako-Class|UList],SlotList,NewList),
+	%getchron(TimeStamp),
+	%asserta( frinst(Class,Name,NewList,TimeStamp) ),
+	%!.
+
+addf(Class,UList) :- addf(Class,UList,TimeStamp).
+
+addf(Class,UList,TimeStamp) :-
 	(var(Nm),genid(Name);Name=Nm),
 	add_slots(Class,Name,[ako-Class|UList],SlotList,NewList),
 	getchron(TimeStamp),

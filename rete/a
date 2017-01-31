@@ -1,0 +1,8 @@
+fact(1,couch(1,2),1).
+fact(2,wall(2,catozza),1).
+fact(5,tv(4,no,table),1).
+fact(3,tv(3,no,floor),1).
+
+rule(1,end_table(no),and([couch(IDcouch,IDwall),wall(IDwall,Opposite),tv(IDtv,no,floor)]),3,1).
+rule(2,end_table(salvini),and([couch(IDcouch,IDwall),wall(IDwall,Opposite),tv(IDtv,no,floor)]),3,1).
+rule(3,end_table(Opposite),and([couch(IDcouch,IDwall),wall(IDwall,Opposite),tv(IDtv,no,table),end_table(no)]),3,1).

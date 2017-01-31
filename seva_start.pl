@@ -513,38 +513,92 @@ do(11) :-
 % Modifica nostra
 do(12) :-
 	curr_task(1),
-	gui_popup(wrong2),
+	gui_popup(wrong8),
 	gui_seva(menu),
 	read(Chc),
 	do(Chc),
 	!.
 do(12) :-
 	curr_task(2),
-	start_count,	%Modifica apportata da Luigi Tedone, fa partire il timer che misura la durata del processo inferenziale
-	retractall(curr_task(_)),
-	assert(curr_task(3)),	
-	reconsult('./gie/gie_forward_rete.pl'),
-	gui_gie(heading),
-	%creo i predicati irule per ciascuna regola utili all'indicizzazione
-	initindexrules,
-	%creo le liste (iniziali e di servizio) con le regole presenti nella wm
-	initialrules,
-	%creo le liste (iniziali e di servizio) con i fatti presenti nella wm
-	initialfacts,
-	%con le regole presenti nella wm creo i nuovi alberi aventi la la radice con le condizioni di ogni regola
-	init_trees, 
-	%richiamo il ricercatore di frame e lo cerco
-	reconsult('./gie/gie_frame.pl'),
-	findframe, %se non è stato definito use_frame(FRAME) i frame non saranno utilizzati
-	%richiamo il gestore principale
-	mainloop,
-	gui_gie(closing),
+	reconsult('./rete/retefoop.pl'),
+	compile,
+	gui_popup(info8),
 	gui_seva(menu),
 	read(Chc),
 	do(Chc),
 	!.
 do(12) :-
+	gui_popup(wrong8),
+	gui_seva(menu),
+	read(Chc),
+	do(Chc),
+	!.
+
+do(13) :-
+	curr_task(1),
 	gui_popup(wrong2),
+	gui_seva(menu),
+	read(Chc),
+	do(Chc),
+	!.
+do(13) :-
+	curr_task(2),
+	reconsult('./rete/retefoop.pl'),
+	initialize,
+	go,
+	gui_popup(info8),
+	gui_seva(menu),
+	read(Chc),
+	do(Chc),
+	!.
+do(13) :-
+	gui_popup(wrong2),
+	gui_seva(menu),
+	read(Chc),
+	do(Chc),
+	!.
+
+do(14) :-
+	curr_task(1),
+	gui_popup(wrong8),
+	gui_seva(menu),
+	read(Chc),
+	do(Chc),
+	!.
+do(14) :-
+	curr_task(2),
+	reconsult('./rete/retefoop.pl'), 
+	display_net,
+	gui_popup(info8),
+	gui_seva(menu),
+	read(Chc),
+	do(Chc),
+	!.
+do(14) :-
+	gui_popup(wrong8),
+	gui_seva(menu),
+	read(Chc),
+	do(Chc),
+	!.
+
+do(15) :-
+	curr_task(1),
+	gui_popup(wrong8),
+	gui_seva(menu),
+	read(Chc),
+	do(Chc),
+	!.
+do(15) :-
+	curr_task(2),
+	reconsult('./rete/retefoop.pl'), % da spostare in un file generico
+	print,
+	gui_popup(info8),
+	gui_seva(menu),
+	read(Chc),
+	do(Chc),
+	!.
+do(15) :-
+	gui_popup(wrong8),
 	gui_seva(menu),
 	read(Chc),
 	do(Chc),

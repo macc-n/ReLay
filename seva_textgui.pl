@@ -33,7 +33,10 @@ gui_seva(menu) :-
 	nl,write('     9 - Modify membership setting. '),   %aggiunto da Pasquadibisceglie V. - Zaza G.
 	nl,write('    10 - Forced Removal. '),   %aggiunto da Bruno S. - Morelli N. - Pinto A.
 	nl,write('    11 - Filters. '),   %aggiunto da Bruno S. - Morelli N. - Pinto A.
-	nl,write('    12 - GIE with RETE pattern matching. '),	%aggiunto da noi
+	nl,write('    12 - Create RETE structure. '),	%aggiunto da noi
+	nl,write('    13 - Start GIE with RETE pattern matching. '),	%aggiunto da noi
+	nl,write('    14 - Display RETE structure. '),	%aggiunto da noi
+	nl,write('    15 - Display working memory. '),	%aggiunto da noi
 	nl,write('     0 - Exit. '),
 	nl,nl,write('     Type number: ').
 gui_seva(closing) :- 
@@ -80,6 +83,9 @@ gui_popup(info6) :-
 gui_popup(info7) :-
 	nl,write('     ___________________ FORCED REMOVAL ____________       '),
 	nl,write('     Insert the fact to not assert during the GIE process: '),nl.
+gui_popup(info8) :-		% aggiunto da noi
+	nl,write('     ___________________ STRUCTURE CREATED ____________       '),
+	nl,write('     Explain: The RETE structure has been created correctly. '),nl.
 gui_popup(saving) :-
 	curr_flog(FileLog),
 	nl,nl,write('     ____________ INFORMING: saving of deductions ___________          '),
@@ -108,6 +114,9 @@ gui_popup(wrong6) :-
 gui_popup(wrong7) :-
 	nl,write('     ___________________ WARNING: wrong choice _________________       '),%aggiunto da Pasquadibisceglie V. - Zaza G.
 	nl,write('     Explain: In order to change the membership values, the environment must be initialized, please.'),nl.	
+gui_popup(wrong8) :-
+	nl,write('     ___________________ WARNING: wrong choice _________________       '),%aggiunto da noi
+	nl,write('     Explain: first one load a knowledge base (choice 1), please.'),nl.	
 
 
 /****************************

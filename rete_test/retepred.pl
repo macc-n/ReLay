@@ -355,6 +355,7 @@ ffsend(Fact,TimeStamp,NextList) :-
 	%fail.
 %delrete(_,_,_).
 delrete(Name,TimeStamp) :-
+	write('delrete: '),write(Name),nl,
 	root(ID,P,NextList),
 	functor(P,Name,_),
 	term_variables(P,ReqList),
@@ -378,7 +379,6 @@ delr(Name,ReqList,TimeStamp).
 
 send(_,[]).
 send(Tokens, [Node|Rest]) :-
-	write('send: '),write(Node),write(' '),write(Tokens),nl,
 	sen(Node, Tokens),
 	send(Tokens, Rest).
 

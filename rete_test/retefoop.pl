@@ -5,6 +5,8 @@
 
 :- reconsult('retepred.pl').
 
+:- dynamic (gfactid/1).
+
 % operator definitions
 
 :-op(800,xfx,==>).          % used to separate LHS and RHS of rule
@@ -52,6 +54,8 @@ doit(X) :-
 
 % actions to take based on commands
 
+do(print) :- print,!.
+
 do(exit) :- !.
 do(go) :-
 	initialize,
@@ -63,6 +67,17 @@ do(list) :- lst,!.       % lists all of working storage
 do(list(X)) :- lst(X),!. % lists all which match the pattern
 do(options) :- set_messtypes,!.
 do(_) :- message(102).
+
+print :- 
+	write_nl('Facts:'),
+	forall(fact(X,Y,Z),write_nl(fact(X,Y,Z))),
+	write_nl('Rules:'),
+	forall(rule(A,B,C,D,E),write_nl(rule(A,B,C,D,E))).
+
+write_nl(X) :-
+	write(X),
+	nl.
+
 
 % loads the rules (Prolog terms) into the Prolog database
 
@@ -87,11 +102,21 @@ initialize :-
 	assert(conflict_set([])),
 	assert(mea(no)),
 	%initial_data(X),
-	forall(fact(X,Y,Z),assert_ws(fact(X,Y,Z))),
+	%forall(fact(X,Y,Z),assert_ws(fact(X,Y,Z))),
+	forall(fact(X,Y,Z),assert_fact_memory(fact(X,Y,Z))),
 	%assert_list(X),
 	message(121), !.
 initialize :-
 	message(103).
+
+assert_fact_memory(fact(X,Y,Z)) :-
+	retract(gfactid(N)),
+	greater(N,X,ID),
+	assert(gfactid(ID)),
+	assert_ws(fact(X,Y,Z)).
+
+greater(X,Y,Z) :-
+	(X>Y -> Z=X; Z=Y).
 
 
 
@@ -207,11 +232,16 @@ update_ws(Prem) :-
 update_ws(Prem) :-
 	message(108,Prem).
 	
+%retract_ws(Prem/T) :- retract_ws(Prem).
+%retract_ws(Prem) :-
+	%conv(Prem,Class,Name,UList),
+	%delrete(Class,Name,TimeStamp),
+	%delf(Class,Name,UList).
+
 retract_ws(Prem/T) :- retract_ws(Prem).
 retract_ws(Prem) :-
-	conv(Prem,Class,Name,UList),
-	delrete(Class,Name,TimeStamp),
-	delf(Class,Name,UList).
+	delrete(Name,TimeStamp).
+	%delf(Name,UList).
 
 %conv(Class-Name with List, Class, Name, List).
 %conv(Class-Name, Class, Name, []).
@@ -245,20 +275,32 @@ process(N,[Action|Rest],LHS) :-
 % if its retract, use the reference numbers stored in the Lrefs list,
 % otherwise just take the action
 
-take(retract(N),LHS) :-
-	(N == all; integer(N)),
-	retr(N,LHS),!.
+%take(retract(N),LHS) :-
+	%(N == all; integer(N)),
+	%retr(N,LHS),!.
 take(A,_) :-take(A),!.
+
+%take(retract(X)) :- retract_ws(X), !.
+
+%take(assert(X)) :-
+%	assert_ws(X),
+	%!.
+
+%take(update(X)) :-
+	%update_ws(X),
+	%!.
 
 take(retract(X)) :- retract_ws(X), !.
 
-take(assert(X)) :-
-	assert_ws(X),
+take(X) :-
+	write(X),nl,
+	X=..[Name|List],	
+	gen_fact_id(G),
+	assert(fact(G,X,1)),
+	assert_ws(fact(G,X,1)),
 	!.
 
-take(update(X)) :-
-	update_ws(X),
-	!.
+
 	
 take(X # Y) :- X=Y,!.
 take(X = Y) :- X is Y,!.
@@ -445,6 +487,13 @@ genid(G) :-
 	retract(gid(N)),
 	G is N + 1,
 	asserta(gid(G)).
+
+gen_fact_id(G) :-
+	retract(gfactid(N)),
+	G is N + 1,
+	asserta(gfactid(G)).
+
+gfactid(0).
 
 gid(100).
 	

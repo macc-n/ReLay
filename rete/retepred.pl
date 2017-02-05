@@ -6,12 +6,6 @@
 
 % retecomp - compile rules into a rete network
 
-:-op(800,xfx,==>).         % used to separate LHS and RHS of rule
-:-op(500,xfy,#).           % used to separate attributes and values
-%:-op(810,fx,rule).         % used to define rule
-:-op(700,xfy,#).           % used for unification instead of =
-:-op(700,xfy,\=).		      % not equal
-:-op(600,xfy,with).		   % used for frame instances in rules
 
 :- dynamic (rule/5).
 
@@ -77,11 +71,7 @@ wr_lis([H|T]) :-
 % compile each rule into the rete net
 
 rete_compil :-
-	%rule N# LHS ==> RHS,
-	%rule(Idr,R,C,P,Crt),
 	rule(N,RHS,and(LHS),K,P),
-	%write(N), write(' '), write(LHS), write(' '), write(RHS), write(' '), write(K), write(' '), write(P), nl,
-	
 	rete_comp(N,LHS,RHS),
 	fail.
 rete_compil :-
@@ -90,11 +80,6 @@ rete_compil :-
 % compile an individual rule into the net
 
 rete_comp(N,[H|T],RHS) :-
-	%term(H,Hw),
-	%check_root(RN,Hw,HList),
-	%retcom(root(RN),[Hw/_],HList,T,N,RHS),
-	%functor(H,P,_),
-	%term_variables(H,PList),
 	check_root(RN,H,HList),
 	retcom(root(RN),[H/_],HList,T,N,[RHS]),
 	message(202,N), !.
@@ -114,10 +99,7 @@ retcom(PNID,OutTok,PrevList,[],N,RHS) :-
 	update_node(PNID,PrevList,rule-N),
 	!.
 retcom(PNID,PrevNode,PrevList,[H|T],N,RHS) :-
-	%term(H,Hw),
-	%check_root(RN,Hw,HList),
 	check_root(RN,H,HList),
-	%check_node(PrevNode,PrevList,[Hw/_],HList,NID,OutTok,NList),
 	check_node(PrevNode,PrevList,[H/_],HList,NID,OutTok,NList),
 	update_node(PNID,PrevList,NID-l),
 	update_root(RN,HList,NID-r),
@@ -129,9 +111,6 @@ retcom(PNID,PrevNode,PrevList,[H|T],N,RHS) :-	%some kind of tester call
 	!,
 	retcom(test-NID,OutTok,NList,T,N,RHS).	
 
-%term(Class-Name with List,Class-Name with List).
-%term(Class-Name, Class-Name with []).
-%term(Value(Attribute)).
 
 check_root(NID,Term,[]) :-
 	not(root(_,Term,_)),
@@ -321,59 +300,34 @@ var_gen(V) :-
 	%root(ID,Class-Name with ReqList, NextList),
 	%ffsend(Class,Name,ReqList,TimeStamp,NextList),
 	%fail.
+	
+	
 addrete(Fact,TimeStamp) :-
 	root(ID,Fact,NextList),
-	write('fact: '),write(Fact),nl,
-	Fact=..[Name|ReqList],
-	%ffsend(Name,ReqList,TimeStamp,NextList),
 	ffsend(Fact,TimeStamp,NextList),
 	fail.
-%addrete(_,_,_).
 addrete(_,_).
 
 
 % fullfill the request list from the token, and send the instantiated
 % token through the net.
 
-%ffsend(Class,Name,ReqList,TimeStamp,NextList) :-
-	%getf(Class,Name,ReqList),
-	%send(tok(add,[(Class-Name with ReqList)/TimeStamp]), NextList),
-	%!.
-%ffsend(Name,ReqList,TimeStamp,NextList) :-
-	%getf(Name,ReqList),
-	%write('ffsend: '),write(Name),write(' '),write(ReqList),nl,
-	%send(tok(add,[Name(ReqList)/TimeStamp]), NextList),
-	%!.
+
 ffsend(Fact,TimeStamp,NextList) :-
-	%getf(Name,ReqList),
 	send(tok(add,[Fact/TimeStamp]), NextList),
 	!.
 
-%delrete(Class,Name,TimeStamp) :-
-	%root(ID,Class-Name with ReqList, NextList),
-	%delr(Class,Name,ReqList,TimeStamp),
-	%fail.
-%delrete(_,_,_).
-delrete(Name,TimeStamp) :-
-	write('delrete: '),write(Name),nl,
+
+delrete(Fact,TimeStamp) :-
 	root(ID,P,NextList),
-	functor(P,Name,_),
-	term_variables(P,ReqList),
-	delr(Name,ReqList,TimeStamp),
+	delr(Fact,TimeStamp),
 	fail.
 delrete(_,_).
 
-%delr(Class,Name,ReqList,TimeStamp) :-
-	%getf(Class,Name,ReqList),
-	%!, send(tok(del,[(Class-Name with ReqList)/TimeStamp]), NextList).
-%delr(Class,Name,ReqList,TimeStamp).
 
-delr(Name,ReqList,TimeStamp) :-
-	getf(Name,ReqList),
-	!.
-	%!, 
-	%send(tok(del,[Name(ReqList)/TimeStamp]), NextList).
-delr(Name,ReqList,TimeStamp).
+delr(Fact,TimeStamp) :-
+	!, send(tok(del,[Fact/TimeStamp]), NextList).
+delr(Fact,TimeStamp).
 
 % send the new token to each of the succesor nodes
 

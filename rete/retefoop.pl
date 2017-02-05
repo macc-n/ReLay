@@ -7,14 +7,6 @@
 
 :- dynamic (gfactid/1).
 
-% operator definitions
-
-:-op(800,xfx,==>).          % used to separate LHS and RHS of rule
-:-op(500,xfy,#).            % used to separate attributes and values
-:-op(810,fx,rule).          % used to define rule
-:-op(700,xfy,#).            % used for unification instead of =
-:-op(700,xfy,\=).		       % not equal
-:-op(600,xfy,with).		    % used for frame instances in rules
 
 main :- welcome, supervisor.
 
@@ -54,19 +46,20 @@ doit(X) :-
 
 % actions to take based on commands
 
-do(print) :- print,!.
 
-do(exit) :- !.
-do(go) :-
-	initialize,
-	go, !.
-do(load) :-load,!.
-do(compile) :- compile,!.
-do(displaynet) :- display_net,!.
-do(list) :- lst,!.       % lists all of working storage
-do(list(X)) :- lst(X),!. % lists all which match the pattern
-do(options) :- set_messtypes,!.
-do(_) :- message(102).
+%do(print) :- print,!.
+
+%do(exit) :- !.
+%do(go) :-
+%	initialize,
+%	go, !.
+%do(load) :-load,!.
+%do(compile) :- compile,!.
+%do(displaynet) :- display_net,!.
+%do(list) :- lst,!.       % lists all of working storage
+%do(list(X)) :- lst(X),!. % lists all which match the pattern
+%do(options) :- set_messtypes,!.
+%do(_) :- message(102).
 
 print :- 
 	write_nl('Facts:'),
@@ -101,10 +94,7 @@ initialize :-
 	abolish(conflict_set,1),
 	assert(conflict_set([])),
 	assert(mea(no)),
-	%initial_data(X),
-	%forall(fact(X,Y,Z),assert_ws(fact(X,Y,Z))),
 	forall(fact(X,Y,Z),assert_fact_memory(fact(X,Y,Z))),
-	%assert_list(X),
 	message(121), !.
 initialize :-
 	message(103).
@@ -217,10 +207,6 @@ get_ws(Prem,Time) :-
 
 assert_ws(fact(X,Y,Z)) :-
 	message(109,Y),
-	Y=..[Name|AList],
-	%write(Y),nl,write(Name),nl,write(AList),nl,
-	%addf(Name,AList,TimeStamp),
-	%addrete(Name,TimeStamp).
 	addrete(Y,TimeStamp).
 	
 update_ws(Prem) :-
@@ -240,7 +226,8 @@ update_ws(Prem) :-
 
 retract_ws(Prem/T) :- retract_ws(Prem).
 retract_ws(Prem) :-
-	delrete(Name,TimeStamp).
+	delrete(Prem,TimeStamp),
+	retract(fact(X,Prem,Y)).
 	%delf(Name,UList).
 
 %conv(Class-Name with List, Class, Name, List).
@@ -280,15 +267,6 @@ process(N,[Action|Rest],LHS) :-
 	%retr(N,LHS),!.
 take(A,_) :-take(A),!.
 
-%take(retract(X)) :- retract_ws(X), !.
-
-%take(assert(X)) :-
-%	assert_ws(X),
-	%!.
-
-%take(update(X)) :-
-	%update_ws(X),
-	%!.
 
 take(retract(X)) :- retract_ws(X), !.
 

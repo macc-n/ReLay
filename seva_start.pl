@@ -466,7 +466,7 @@ do(8) :-
 	!.
 %aggiunto da Pasquadibisceglie V. - Zaza G. : inserimento della funzionalità della modifica delle membership.
 do(9) :-
-curr_task(XChs),
+	curr_task(XChs),
 	XChs > 1,
 	gui_popup(wrong7),
 	gui_seva(menu),

@@ -33,10 +33,10 @@ gui_seva(menu) :-
 	nl,write('     9 - Modify membership setting. '),   %aggiunto da Pasquadibisceglie V. - Zaza G.
 	nl,write('    10 - Forced Removal. '),   %aggiunto da Bruno S. - Morelli N. - Pinto A.
 	nl,write('    11 - Filters. '),   %aggiunto da Bruno S. - Morelli N. - Pinto A.
-	nl,write('    12 - Create RETE structure. '),	%aggiunto da noi
-	nl,write('    13 - Start GIE with RETE pattern matching. '),	%aggiunto da noi
-	nl,write('    14 - Display RETE structure. '),	%aggiunto da noi
-	nl,write('    15 - Display working memory. '),	%aggiunto da noi
+	nl,write('    12 - Create RETE structure. '),	%aggiunto Macchiarulo N. - Rinalidi F. - Rizzi S.
+	nl,write('    13 - Start GIE with RETE pattern matching. '),	%aggiunto Macchiarulo N. - Rinalidi F. - Rizzi S.
+	nl,write('    14 - Display RETE structure. '),	%aggiunto Macchiarulo N. - Rinalidi F. - Rizzi S.
+	nl,write('    15 - Display working memory. '),	%aggiunto Macchiarulo N. - Rinalidi F. - Rizzi S.
 	nl,write('     0 - Exit. '),
 	nl,nl,write('     Type number: ').
 gui_seva(closing) :- 

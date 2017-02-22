@@ -18,8 +18,8 @@ rete_compile :-
 	abolish(nid,1),
 	asserta(nid(0)),
 	rete_compil.
-%	display_net.
 
+	%sposta in un altro file
 display_net :-
 	display_roots,nl,
 	display_bis,nl,
@@ -156,8 +156,6 @@ update_node(PNID,PrevList,NID) :-
 %	NID - returned ID of the node
 %	OutTok - returned tokenlist from the node
 %	NList - returned list of successor nodes from the node
-
-%	first case - there isn't a matching rule using Prolog's match, so 
 %		build a new one
 
 check_node(PNode,PList,H,HList,NID,OutTok,[]) :-
@@ -250,26 +248,17 @@ de_vari([H|T]) :-
 de_vari(X) :- de_var(X).
 
 de_var(X/_) :- de_var(X).
-%de_var(X-Y with List) :-
-	%init_vargen,
-	%de_v(X-Y),
-	%de_vl(List), !.
+
 de_var(X) :-
 	init_vargen,
 	term_variables(X,XList),
 	de_vl(XList).
-%de_var(X-Y) :-
-	%init_vargen,
-	%de_v(X-Y), !.
 
 de_vl([]).
 de_vl([H|T]) :-
 	de_v(H),
 	de_vl(T).
 
-%de_v(X-Y) :-
-	%d_v(X),
-	%d_v(Y).
 de_v(X) :-
 	d_v(X).
 
@@ -291,16 +280,6 @@ var_gen(V) :-
 	append("#VAR_",NL,X),
 	name(V,X).
 
-% predicates to update the rete network
-
-% add a token to the rete net.  a token is of the form C-N with [S-V,...]
-% ReqList gets bound with the values from the term added to the database.
-
-%addrete(Class,Name,TimeStamp) :-
-	%root(ID,Class-Name with ReqList, NextList),
-	%ffsend(Class,Name,ReqList,TimeStamp,NextList),
-	%fail.
-	
 	
 addrete(Fact,TimeStamp) :-
 	root(ID,Fact,NextList),
@@ -308,9 +287,6 @@ addrete(Fact,TimeStamp) :-
 	fail.
 addrete(_,_).
 
-
-% fullfill the request list from the token, and send the instantiated
-% token through the net.
 
 
 ffsend(Fact,TimeStamp,NextList) :-
@@ -377,4 +353,3 @@ matchLeft(_,_,_,_,_).
 
 	                                                                                                                           
 
-

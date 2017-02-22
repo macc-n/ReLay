@@ -1,0 +1,276 @@
+% Copyright (c) Gruppo IA, 2017
+
+:- Reconsult('retepred.pl').
+
+:- dynamic (gfactid/1).
+%Comando Relay 12
+%Create RETE structure
+compile :-
+	rete_compile.
+
+% assert each of the initial conditions into working storage
+
+initialize :-
+	message(120),
+	abolish(memory,2),
+	abolish(inst,3),
+	setchron(1),
+	delf(all),
+	abolish(conflict_set,1),
+	assert(conflict_set([])),
+	assert(mea(no)),
+	forall(fact(X,Y,Z),assert_fact_memory(fact(X,Y,Z))),
+	message(121), !.
+initialize :-
+	message(103).
+
+assert_fact_memory(fact(X,Y,Z)) :-
+	retract(gfactid(N)),
+	greater(N,X,ID),
+	assert(gfactid(ID)),
+	assert_ws(fact(X,Y,Z)).
+
+greater(X,Y,Z) :-
+	(X>Y -> Z=X; Z=Y).
+
+% the main inference loop, find a rule and try it.  if it fired, say so
+% and repeat the process.  if not go back and try the next rule.  when
+% no rules succeed, stop the inference.
+
+go :-
+	conflict_set(CS),
+	select_rule(CS,inst(ID,LHS,RHS)),
+	message(104,ID),
+	(process(ID,RHS,LHS); true),		% action side might fail
+	del_conflict_set(ID,LHS,RHS),
+	!,go.
+go :-
+	conflict_set([]),
+	%finished, !.			supplied in kb for what to do at end
+	write('Conflict set is empty'),nl,
+	!.
+go :-
+	message(119).
+
+del_conflict_set(N,TokenList,Action) :-
+	conflict_set(CS),
+	remove(inst(N,TokenList,Action),CS,CS2),
+	message(105,N),
+	retract( conflict_set(_) ),
+	asserta( conflict_set(CS2) ).
+del_conflict_set(N,TokenList,Action) :-
+	message(106,N).
+
+add_conflict_set(N,TokenList,Action) :-
+	message(107,N),
+	retract( conflict_set(CS) ),
+	asserta( conflict_set([inst(N,TokenList,Action)|CS]) ).
+
+select_rule(CS,R) :-
+	message(122,CS),
+	mea_filter(0,CS,[],CSR),
+	lex_sort(CSR,R).
+
+% sort the rest of the conflict set according to the lex strategy
+
+lex_sort(L,R) :-
+	build_keys(L,LK),
+	sort(LK,X),
+	reverse(X,[K-R|_]).
+
+% build lists of time stamps for lex sort keys
+
+build_keys([],[]).
+build_keys([inst(N,TokenList,C)|T],[Key-inst(N,TokenList,C)|TR]) :-
+	build_chlist(TokenList,ChL),
+	sort(ChL,X),
+	reverse(X,Key),
+	build_keys(T,TR).
+
+% build a list of just the times of the various matched attributes
+% for use in rule selection
+
+build_chlist([],[]).
+build_chlist([_/Chron|T],[Chron|TC]) :-
+	build_chlist(T,TC).
+
+% add the test for mea if appropriate that emphasizes the first attribute
+% selected.
+
+mea_filter(_,X,_,X) :- not mea(yes), !.
+mea_filter(_,[],X,X).
+mea_filter(Max,[inst(N,[A/T|Z],C)|X],Temp,ML) :-
+	T < Max,
+	!, mea_filter(Max,X,Temp,ML).
+mea_filter(Max,[inst(N,[A/T|Z],C)|X],Temp,ML) :-
+	T = Max,
+	!, mea_filter(Max,X,[inst(N,[A/T|Z],C)|Temp],ML).
+mea_filter(Max,[inst(N,[A/T|Z],C)|X],Temp,ML) :-
+	T > Max,
+	!, mea_filter(T,X,[inst(N,[A/T|Z],C)],ML).
+
+assert_ws(fact(X,Y,Z)) :-
+	message(109,Y),
+	addrete(Y,TimeStamp).
+
+retract_ws(Prem/T) :- retract_ws(Prem).
+retract_ws(Prem) :-
+	delrete(Prem,TimeStamp),
+	retract(fact(X,Prem,Y)).
+
+
+% various tests allowed on the LHS
+
+test(not(X)) :- !.
+test(X#Y) :- X=Y,!.
+test(X>Y) :- X>Y,!.
+test(X>=Y) :- X>=Y,!.
+test(X<Y) :- X<Y,!.
+test(X=<Y) :- X=<Y,!.
+test(X \= Y) :- not X=Y, !.
+test(X = Y) :- X=Y, !.
+test(X = Y) :- X is Y,!.
+test(is_on(X,Y)) :- is_on(X,Y),!.
+test(call(X)) :- call(X).
+
+% recursively execute each of the actions in the RHS list
+
+process(N,[],_) :- message(118,N), !.
+process(N,[Action|Rest],LHS) :-
+	take(Action,LHS),
+	!,process(N,Rest,LHS).
+process(N,[Action|Rest],LHS) :-
+	message(110,N), !, fail.
+
+% if its retract, use the reference numbers stored in the Lrefs list,
+% otherwise just take the action
+
+take(A,_) :-take(A),!.
+
+
+take(retract(X)) :- retract_ws(X), !.
+
+take(X) :-
+	write(X),nl,
+	X=..[Name|List],
+	gen_fact_id(G),
+	assert(fact(G,X,1)),
+	assert_ws(fact(G,X,1)),
+	!.
+
+take(X # Y) :- X=Y,!.
+take(X = Y) :- X is Y,!.
+take(write(X)) :- write(X),!.
+take(write_line(X)) :- write_line(X),!.
+take(nl) :- nl,!.
+take(read(X)) :- read(X),!.
+take(prompt(X,Y)) :- nl,write(X),read(Y),!.
+take(cls) :- cls, !.
+take(is_on(X,Y)) :- is_on(X,Y), !.
+take(list(X)) :- lst(X), !.
+take(call(X)) :- call(X).
+
+% maintain a time counter
+
+setchron(N) :-
+	retract( chron(_) ),
+	asserta( chron(N) ),!.
+setchron(N) :-
+	asserta( chron(N) ).
+
+	% this implements a frame based scheme for knowledge representation
+
+:- op(600,fy,val).
+:- op(600,fy,calc).
+:- op(600,fy,def).
+:- op(600,fy,add).
+:- op(600,fy,del).
+
+
+genid(G) :-
+	retract(gid(N)),
+	G is N + 1,
+	asserta(gid(G)).
+
+gen_fact_id(G) :-
+	retract(gfactid(N)),
+	G is N + 1,
+	asserta(gfactid(G)).
+
+gfactid(0).
+
+gid(100).
+
+%controlla qui
+delf(all) :-
+	retract( frinst(_,_,_,_) ),
+	fail.
+delf(all).
+
+
+
+% utilities
+
+remove(X,[X|Y],Y) :- !.
+remove(X,[Y|Z],[Y|W]) :- remove(X,Z,W).
+
+is_on(X,[X|Y]).
+is_on(X,[Y|Z]) :- is_on(X,Z).
+
+write_line([]) :- nl.
+write_line([H|T]) :-
+	write(H),tab(1),
+	write_line(T).
+
+
+
+% Message handling and messages
+
+message(N) :- message(N,'').
+
+message(N,Args) :-
+	mess(N,break,Text),
+	write(break),tab(1),write(N),write(': '),write(Text),write(Args),nl.
+%	break.
+message(N,Args) :-
+	mess(N,error,Text),
+	write(error),tab(1),write(N),write(': '),write(Text),write(Args),nl,
+	!, fail.
+message(N,Args) :-
+	mess(N,Type,Text),
+	mess_types(TT),
+	member(Type,TT),
+	write(Type),tab(1),write(N),write(': '),write(Text),write(Args),nl,
+	!.
+message(_,_).
+
+mess_types([info,trace,warning,debug]).
+
+set_messtypes :-
+	message(123,[info,warn,trace,error,debug]),
+	mess_types(X),
+	message(124,X),
+	read(MT),
+	retract( mess_types(_) ),
+	asserta( mess_types(MT) ).
+
+mess(103,error, 'Initialization Error').		%  initialize
+mess(104,trace, 'Rule Firing: ').				%  go
+mess(105,trace, 'Conflict Set Delete: ').		%  del_confli...
+mess(106,trace, 'Failed to CS Delete: ').		%  del_confli...
+mess(107,trace, 'Conflict Set Add: ').			%  add_confli...
+mess(109,trace, 'Asserting: ').				%  add_ws
+mess(110,trace, 'Failing Action Part: ').		%  process
+mess(118,trace, 'Rule Fired: ').				%  process
+mess(119,error, 'Premature end to run: ').		%  go
+mess(120,info, 'Initializing').				%  initialize
+mess(121,info, 'Initialization Complete').		%  initialize
+mess(122,debugx, 'Conflict Set').				%  select_rule
+mess(123,info, 'Legal Message Types: ').		%  set_message
+mess(124,info, 'Current Message Types: ').		%  set_message
+
+mess(201,info, 'Rule Rete Network Complete').	%  rete_compil
+mess(202,info, 'Rule: ').					%  rete_comp
+mess(203,error, 'Rule Failed to Compile: ').		%  rete_comp
+
+

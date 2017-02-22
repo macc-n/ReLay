@@ -520,7 +520,7 @@ do(12) :-
 	!.
 do(12) :-
 	curr_task(2),
-	reconsult('./rete/retefoop.pl'),
+	reconsult('./rete/retecompile.pl'),
 	compile,
 	gui_popup(info8),
 	gui_seva(menu),
@@ -543,7 +543,7 @@ do(13) :-
 	!.
 do(13) :-
 	curr_task(2),
-	reconsult('./rete/retefoop.pl'),
+	reconsult('./rete/retego.pl'),
 	initialize,
 	go,
 	gui_popup(info8),
@@ -567,7 +567,7 @@ do(14) :-
 	!.
 do(14) :-
 	curr_task(2),
-	reconsult('./rete/retefoop.pl'), 
+	reconsult('./rete/retewrite.pl'), 
 	display_net,
 	gui_popup(info8),
 	gui_seva(menu),
@@ -590,7 +590,7 @@ do(15) :-
 	!.
 do(15) :-
 	curr_task(2),
-	reconsult('./rete/retefoop.pl'), % da spostare in un file generico
+	reconsult('./rete/retewrite.pl'),
 	print,
 	gui_popup(info8),
 	gui_seva(menu),

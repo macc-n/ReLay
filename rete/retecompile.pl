@@ -8,8 +8,45 @@
 %Lista funzioni usate per il punto 12
 %Comando Relay 12
 %Create RETE structure
+
+
+
+insertAtEnd(X,[ ],[X]).
+insertAtEnd(X,[H|T],[H|Z]) :- insertAtEnd(X,T,Z). 
+
 compile :-
+	rete_pre_compiler,
 	rete_compile.
+
+	
+% eliminatore degli or nelle regole e generatore di regole equivalenti
+rete_pre_compiler :-
+	forall(rule(N,RHS,and(LHS),K,P),rule_pre_compiler(N,RHS,LHS,K,P)).
+	
+rule_pre_compiler(N,RHS,LHS,K,P):-
+	retract(rule(N,RHS,and(LHS),K,P)),
+	or_deleter(N,RHS,LHS,K,P, NewLHS).
+	
+or_deleter(N,RHS,[H|T],K,P, NewLHS) :-
+	H=..[Name|List],
+	(Name = 'or' -> or_adder(N,RHS,T,K,P,NewLHS,List) ; add_continue(N,RHS,T,K,P,NewLHS,H)).
+
+or_deleter(N,RHS,[], K, P, NewLHS) :-
+	assert(rule(N,RHS,and(NewLHS),K,P)).
+	
+	
+add_continue(N,RHS,T,K,P,LHS,H) :-	
+	insertAtEnd(H,LHS, NewLHS),
+	or_deleter(N, RHS, T, K, P, NewLHS).
+
+or_adder(N,RHS,T,K,P,LHS,[H | Rest_or]) :-
+	insertAtEnd(H,LHS,NewLHS),
+	or_deleter(N,RHS,T,K,P,NewLHS),
+	or_adder(N,RHS,T,K,P,LHS,Rest_or).
+
+or_adder(N,RHS,T,K,P,LHS,[]) :-
+	!.
+	
 
 % predicato per inizializzare l'algoritmo di creazione della struttura
 rete_compile :-
@@ -53,6 +90,7 @@ retcom(PNID,OutTok,PrevList,[],N,RHS) :-
 
 % predicato per controllare se le clausole combaciano con un nodo radice o un nodo a due input già esistente, 
 % in caso contrario ne crea uno nuovo
+
 retcom(PNID,PrevNode,PrevList,[H|T],N,RHS) :-
 	check_root(RN,H,HList),
 	check_node(PrevNode,PrevList,[H/_],HList,NID,OutTok,NList),
